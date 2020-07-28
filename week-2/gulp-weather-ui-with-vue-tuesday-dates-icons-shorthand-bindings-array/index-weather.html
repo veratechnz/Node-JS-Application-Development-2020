@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="css/custom.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/weather-icons.min.css">
+	<title>Weather Forecasting</title>
+</head>
+<body>
+
+	<!-- Parent Div Begins -->
+	<!-- The parent app div has a conditional on it that monitors the weather  -->
+	<!-- data property for a true or false value. This will define if the component/html will render -->
+	<div class="parent" id="app" v-if="weather">
+
+		<!-- Weather UI HTML -->
+		<!-- This element has a class switch function will change and adjust a class from vue -->
+		<div class="weather-widget" v-on:click="isDark = true" v-bind:class="{active: isActive, 'dark-theme': isDark}">
+		  <div class="weather-icon row">
+				<!-- This element has a on click vue bind. Binds can also bind values to attributes -->
+		    <i class="wi wi-day-sunny" id="icon1" v-on:click="doAnAlert()" v-bind:title="newTitle"></i>
+		  </div>
+		  <h1 class="temp-c row">{{weather.data.daily[0].temp.day.toFixed(0)}}</h1>
+		  <h5 class="condition row">{{weather.data.daily[0].weather[0].description}}</h5>
+		  <h3 class="location-name row">Wellington</h3>
+		  <h5 class="location-country row">New Zealand</h5>
+			<h5 style="text-align: center;">{{getDayOfTheWeek(1)}}</h5>
+		</div>
+		<div class="weather-forecast">
+
+		  <div class="forecast-item">
+		    <div class="day">
+		      <h4>{{getDayOfTheWeek(2)}}</h4>
+		      <h6>{{dates[0]}}</h6>
+		    </div>
+		    <div class="forecast">
+		      <i class="wi wi-night-sleet"></i> {{weather.data.daily[1].temp.day.toFixed(0)}}
+		      <h6>Partly Cloudy</h6>
+		    </div>
+		  </div>
+
+		  <div class="forecast-item">
+		    <div class="day">
+		      <h4>{{getDayOfTheWeek(3)}}</h4>
+		      <h6>Aug 7</h6>
+		    </div>
+		    <div class="forecast">
+		      <i class="wi wi-night-sleet"></i> {{weather.data.daily[2].temp.day.toFixed(0)}}
+		      <h6>Partly Cloudy</h6>
+		    </div>
+		  </div>
+
+		  <div class="forecast-item">
+		    <div class="day">
+		      <h4>{{getDayOfTheWeek(4)}}</h4>
+		      <h6>Aug 8</h6>
+		    </div>
+		    <div class="forecast">
+		      <i class="wi wi-day-thunderstorm"></i> 28C
+		      <h6>thunderstorms</h6>
+		    </div>
+		  </div>
+
+		  <div class="forecast-item">
+		    <div class="day">
+		      <h4>{{getDayOfTheWeek(5)}}</h4>
+		      <h6>Aug 9</h6>
+		    </div>
+		    <div class="forecast">
+		      <i class="wi wi-day-sunny"></i> 28C
+		      <h6>Sunny</h6>
+		    </div>
+		  </div>
+
+		  <div class="forecast-item">
+		    <div class="day">
+		      <h4>{{getDayOfTheWeek(6)}}</h4>
+		      <h6>Aug 10</h6>
+		    </div>
+		    <div class="forecast">
+		      <i class="wi wi-night-sleet"></i> 28C
+		      <h6>Partly Cloudy</h6>
+		    </div>
+		  </div>
+
+	  	<div class="forecast-item">
+	      <div class="day">
+	  			<!-- After the last day of the week '5' will return Saturday we can use '-1' -->
+	  			<!-- to loop back to the start of the index array -->
+	        <h4>{{getDayOfTheWeek(7)}}</h4>
+	        <h6>Aug 10 *</h6>
+	      </div>
+	      <div class="forecast">
+	        <i class="wi wi-night-sleet"></i> 28C
+	        <h6>Partly Cloudy</h6>
+	      </div>
+	    </div>
+
+	    	<div class="forecast-item">
+	        <div class="day">
+	    			<!-- After the last day of the week '5' will return Saturday we can use '-1' -->
+	    			<!-- to loop back to the start of the index array -->
+	          <h4>{{getDayOfTheWeek(8)}}</h4>
+	          <h6>Aug 10 *</h6>
+	        </div>
+	        <div class="forecast">
+	          <i class="wi wi-night-sleet"></i> 28C
+	          <h6>Partly Cloudy</h6>
+	        </div>
+	      </div>
+
+		</div>
+	<!-- WeatherUI HTML ENDS -->
+  </div>
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+	<script>
+
+	(function(){
+		console.log(this);
+	// v-if="weather" on line 13 will conditionally render the entire
+	// application after the ajax response, as it will change 'weather: false'
+	// to true (as data is seen as true by the computer logic).
+
+	 var app = new Vue({
+		  el: '#app',
+		  data: {
+				// Start the vue app with weather assigned as false
+				weather: false,
+				dates: ['27-07-2020', '28-07-2020'],
+				daysOf: ['Monday', 'Tuesday'],
+				newTitle: 'This is a sunny icon/day',
+				// Some logic points for switching classes on the html above
+				isActive: true,
+				isDark: false
+		  },
+			methods: {
+				doAnAlert: function () {
+					// alert('this is vue')
+					console.log(this)
+				},
+				// This function will return various days of the week
+				// It references from the number '1' for TODAY. Then 7 for the final day of the week (from the current day).
+				// You can feed it any number, it will loop over the days infinitely no matter the day 
+				// of the week that it is used. 
+				getDayOfTheWeek: function (indexAddition) {
+					// Ref to the date object
+					var date = new Date();
+					// Got an array of days which are strings
+					var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+					// The current day reference which returns a number 0 - 6
+					// var currentDay = date.getDay();
+					var currentDay = date.getDay();
+					console.log(currentDay)
+
+					// Updated algorithm for infinite loop. 
+					function loop(n) {
+						var foundDay;
+					  for (var i=0; i<n; i++) {
+					  	var pointer = (i + currentDay) % days.length;
+					    foundDay = days[pointer]
+					    console.log(foundDay)
+					  }
+					  // returns result
+					  return foundDay
+					}
+					// Returns the day result
+					return loop(indexAddition)
+				} // Function ENDS
+
+			} // methods END
+		});
+
+	 // We have a function pre-written that makes an ajax request
+	 makeAjaxRequest();
+
+	 function makeAjaxRequest () {
+	    // GET request for remote image in node.js
+	    axios({
+	      method: 'get',
+	      url: 'https://api.openweathermap.org/data/2.5/onecall?lat=-41.282626&lon=-174.773390&units=metric&exclude=hourly,minute&appid=66ce6f7e945db003aaa343f0bc010dc8'
+	    }).then(function (response) {
+				// Here we assign the the data response to the app/vue weather property.
+				// We do not need to use 'data.weather' because vue always provides data
+				// as a property by default.
+				app.weather = response
+				// After the api ajax response is assigned we then call another
+				// function to run more code.
+				getStarted()
+	    });
+	  } // makeAjaxRequest ENDS
+
+		// A function that runs after the ajax response
+		function getStarted () {
+			console.log(app.weather)
+		}
+
+
+	}()); // iffe function ENDS
+	</script>
+</body>
+</html>
