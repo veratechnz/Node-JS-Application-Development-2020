@@ -71,14 +71,9 @@
 
     });
 
-
   /*========================================================================
   =            These function exist outside of the Vue Instance            =
   ========================================================================*/
-  
-  
-  
-  /*=====  End of These function exist outside of the Vue Instance  ======*/
   
    function makeAjaxRequest (lat, lng) {
       // getUrl will either be a **1. live geolocation based request or...
@@ -109,12 +104,12 @@
             var iconCode = response.data.daily[i].weather[0].icon;
             var iconUrl = "http://openweathermap.org/img/wn/" + iconCode + "@2x.png";
             icons.push(iconUrl)
-            // console.log(iconUrl);
-            // console.log(icons)
           }
           app.iconsRef = icons;
           console.log(app.iconsRef)
-        }
+        } // getIcons ENDS
+
+
         // Call and assign Icons
         getIcons(response)
       });
